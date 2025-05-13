@@ -1,4 +1,5 @@
 const express = require('express');
+const session = require('express-session');
 const app = express();
 const http = require('http');
 const server = http.createServer(app);
@@ -11,6 +12,18 @@ const multer = require('multer');
 * Importar rutas
 */
 const userRoutes = require('./routes/userRoutes');
+const playerRouters = require('./routes/playerRoutes');
+
+// Configurar el middleware express-session
+app.use(session({
+    secret: 'mi-secreto', // Clave para firmar la cookie de sesión
+    resave: false, // No guarda la sesión si no ha sido modificada
+    saveUninitialized: true, // Guarda sesiones no inicializadas (nuevas, pero sin modificar)
+    cookie: { secure: false } // Cambia a true si usas HTTPS
+  }));
+
+app.use(express.static('dist'));
+app.listen(3000, function() {console.log('Sever running on port 3000')})
 
 
 const port = process.env.PORT || 3000;
@@ -40,6 +53,7 @@ const upload = multer({
 * Llamado de las rutas
 */
 userRoutes(app, upload);
+playerRouters(app);
 
 
 

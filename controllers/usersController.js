@@ -6,6 +6,7 @@ const Rol = require("../models/rol");
 const storage = require("../utils/cloud_storage");
 
 module.exports = {
+  
   login(req, res) {
     const email = req.body.email;
     const password = req.body.password;
@@ -80,12 +81,14 @@ module.exports = {
     });
   },
 
+
+
   async registerWithImage(req, res) {
     const user = JSON.parse(req.body.user); // Capturo los datos que me envie el cliente
 
     const files = req.files;
 
-    if (files.lenght > 0) {
+    if (files.length > 0) {
       const path = `image_${Date.now()}`;
       const url = await storage(files[0], path);
 
@@ -113,7 +116,7 @@ module.exports = {
 
       Rol.create(
         user.id,
-        3,
+        2,
         (err,
         (data) => {
           if (err) {
@@ -133,4 +136,68 @@ module.exports = {
       );
     });
   },
+
+
+  // Metodo para actualizar usuario con imagen
+     async updateWithImage(req, res) {
+        const user = JSON.parse(req.body.user);  // Capturo los datos que me envie el cliente.
+       
+        const files = req.files;
+
+        if(files.length > 0) {
+            const path = `image_${Date.now()}`;
+            const url = await storage(files[0], path);
+            
+            if(url != undefined && url != null){
+                user.image = url;
+
+            }
+        }
+        
+        User.update(user, (err, data) => {
+
+            if(err) {
+                return res.status(501).json({
+                    success: false,
+                    message: 'Error updating user ',
+                    error: err
+                });
+            }
+
+            return res.status(201).json({
+                success: true,
+                message: 'User successfully updated',
+                data: user 
+            });
+
+
+        });
+    },
+
+
+    // Metodo para actualizar usuario sin imagen
+    async updateWithoutImage(req, res) {
+        const user = req.body;  // Capturo los datos que me envie el cliente.
+    
+        
+        User.updateWithoutImage(user, (err, data) => {
+
+            if(err) {
+                return res.status(501).json({
+                    success: false,
+                    message: 'Error updating user ',
+                    error: err
+                });
+            }
+
+            return res.status(201).json({
+                success: true,
+                message: 'User successfully updated',
+                data: user 
+            });
+
+
+        });
+    },
+    
 };
