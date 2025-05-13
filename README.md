@@ -38,10 +38,12 @@ Visual Studio Code
   
 - Paso 8. Agregar la base de datos y contraseña que agrego cuando instalo mysql, en el archivo config.js. Ver imagen.
   
-- ![image](https://github.com/user-attachments/assets/599fc97a-4382-4072-b263-cafaa2f77e07)
+- ![image](https://github.com/user-attachments/assets/d3b045bc-ec05-4691-afac-c8a7a001ba1a)
+
   
 - Paso 9. Usar el archivo db.sql  que esta en el proyecto, abrirlo y ejecutarlo en mysql para que se creen las tablas con las informaciones. Ver imagen.
-- ![image](https://github.com/user-attachments/assets/14961870-72ee-4734-957e-c994123abe16)
+
+- ![image](https://github.com/user-attachments/assets/e3f417c6-0d8d-45b4-85e2-f730ed98bd56)
 
   
 - Paso 10. Ejecutar (nodemon server) en la terminal de vsc.
