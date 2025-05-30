@@ -30,7 +30,9 @@ Visual Studio Code
 - Paso 4. Ejecutar npm install (para instalar los paquetes).
   
 - Paso 5. Agregar la IP de su computadora al archivo server.js (debido a que la conexion se hace de manera local). Ver imagen.
-- ![image](https://github.com/user-attachments/assets/06fe1148-d11b-411a-af7e-9974b5b1662d)
+  
+- ![image](https://github.com/user-attachments/assets/6a0ec63a-0075-40dd-8fdd-d73c9dbb899c)
+
  
 - Paso 7. Instalar mysql en su computadora.
 
