@@ -33,8 +33,11 @@ Visual Studio Code
   
 - ![image](https://github.com/user-attachments/assets/6a0ec63a-0075-40dd-8fdd-d73c9dbb899c)
 
-- Paso 6. Copiar archivo en la raiz del proyecto, contiene el key para poder subir imagenes a firebase.
+- Paso 6. Copiar archivo en la raiz del proyecto, contiene el key para poder subir imagenes a firebase. Ver Imagen.
 - 📌 Live site URL: [here](https://drive.google.com/file/d/1zpFNzKSau3cfT-N121zBJmTagIjPYZfZ/view?usp=drive_link)
+
+- ![image](https://github.com/user-attachments/assets/5840aaf0-6459-4e6a-942d-440e72963fd5)
+
 
  
 - Paso 7. Instalar mysql en su computadora.
