@@ -8,11 +8,13 @@ const cors = require('cors');
 const passport = require('passport');
 const multer = require('multer');
 
-/*
-* Importar rutas
-*/
+
+// Importar rutas
+
 const userRoutes = require('./routes/userRoutes');
-const playerRouters = require('./routes/playerRoutes');
+const categoriesRoutes = require('./routes/categoryRoutes');
+const productsRoutes = require('./routes/productRoutes');
+
 
 // Configurar el middleware express-session
 app.use(session({
@@ -49,16 +51,16 @@ const upload = multer({
 
 });
 
-/*
-* Llamado de las rutas
-*/
-userRoutes(app, upload);
-playerRouters(app);
 
+// Llamado de las rutas
+
+userRoutes(app, upload);
+categoriesRoutes(app, upload);
+productsRoutes(app, upload);
 
 
 server.listen(3000, '192.168.100.39' || 'localhost', function () {
-    console.log('Aplicacion de NodeJS ' + process.pid + ' Iniciada...');
+console.log('Aplicacion de NodeJS ' + process.pid + ' Iniciada...');
 
 });
 

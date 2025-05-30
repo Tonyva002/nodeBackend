@@ -116,7 +116,7 @@ module.exports = {
 
       Rol.create(
         user.id,
-        2,
+        3,
         (err,
         (data) => {
           if (err) {

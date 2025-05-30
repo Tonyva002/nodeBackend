@@ -1,8 +1,8 @@
-# ConcentraBackend
+# DeliveryBackend
 
 ## DESCRIPCION DEL PROYECTO
 
-Backend de la aplicacion concentra en node js, se conecta a la base de datos en mysql, permite insertar usuario, consultar usuario, actualizar usuario, consultar jugadores, subir imagenes a firebase, generar token, etc..
+Backend de la aplicacion Delivery en node js, se conecta a la base de datos en mysql, permite crear, consultar y actualizar usuario, crear, consultar, actualizar y elimiar categorias, listar productos, subir imagenes a firebase, generar token, etc..
 
 ### Links
 📌 Live site URL: [here](https://github.com/Tonyva002/nodeBackend)
@@ -31,22 +31,22 @@ Visual Studio Code
   
 - Paso 5. Agregar la IP de su computadora al archivo server.js (debido a que la conexion se hace de manera local). Ver imagen.
 - ![image](https://github.com/user-attachments/assets/06fe1148-d11b-411a-af7e-9974b5b1662d)
-  
-- Paso 6. Instalar mysql en su computadora.
+ 
+- Paso 7. Instalar mysql en su computadora.
 
-- Paso 7. Crear la base de datos concentra.
+- Paso 8. Crear la base de datos concentra.
   
-- Paso 8. Agregar la base de datos y contraseña que agrego cuando instalo mysql, en el archivo config.js. Ver imagen.
+- Paso 9. Agregar la base de datos y contraseña que agrego cuando instalo mysql, en el archivo config.js. Ver imagen.
   
 - ![image](https://github.com/user-attachments/assets/d3b045bc-ec05-4691-afac-c8a7a001ba1a)
 
   
-- Paso 9. Usar el archivo db.sql  que esta en el proyecto, abrirlo y ejecutarlo en mysql para que se creen las tablas con las informaciones. Ver imagen.
+- Paso 10. Usar el archivo db.sql  que esta en el proyecto, abrirlo y ejecutarlo en mysql para que se creen las tablas con las informaciones. Ver imagen.
 
 - ![image](https://github.com/user-attachments/assets/e3f417c6-0d8d-45b4-85e2-f730ed98bd56)
 
   
-- Paso 10. Ejecutar (nodemon server) en la terminal de vsc.
+- Paso 11. Ejecutar (nodemon server) en la terminal de vsc.
 
 - ### Instalando mysql
 - ### Links
