@@ -36,11 +36,11 @@ Visual Studio Code
  
 - Paso 7. Instalar mysql en su computadora.
 
-- Paso 8. Crear la base de datos concentra.
+- Paso 8. Crear la base de datos delivery.
   
 - Paso 9. Agregar la base de datos y contraseña que agrego cuando instalo mysql, en el archivo config.js. Ver imagen.
   
-- ![image](https://github.com/user-attachments/assets/d3b045bc-ec05-4691-afac-c8a7a001ba1a)
+- ![image](https://github.com/user-attachments/assets/4e1932b4-4509-47bd-b1e2-7c5736b83b83)
 
   
 - Paso 10. Usar el archivo db.sql  que esta en el proyecto, abrirlo y ejecutarlo en mysql para que se creen las tablas con las informaciones. Ver imagen.
