@@ -3,9 +3,10 @@ const passport = require('passport');
 
 module.exports = (app, upload) => {
 
-     //   app.get('/api/categories/getAll', passport.authenticate('jwt', {session: false}), categoriesController.getAll);
+        app.get('/api/products/findByCategory/:id_category', passport.authenticate('jwt', {session: false}), productsController.findByCategory);
         app.post('/api/products/create', passport.authenticate('jwt', {session: false}), upload.array('image', 3), productsController.create);
-       // app.put('/api/categories/updateWithImage', passport.authenticate('jwt', {session: false}), upload.array('image', 1), categoriesController.updateWithImage);
-       // app.put('/api/categories/updateWithoutImage', passport.authenticate('jwt', {session: false}), categoriesController.updateWithoutImage);
-       // app.delete('/api/categories/delete/:id', passport.authenticate('jwt', {session: false}), categoriesController.delete);
+        app.put('/api/products/updateWithImage', passport.authenticate('jwt', {session: false}), upload.array('image', 3), productsController.updateWithImage);
+        app.put('/api/products/updateWithoutImage', passport.authenticate('jwt', {session: false}), productsController.updateWithoutImage);
+        app.delete('/api/products/delete/:id', passport.authenticate('jwt', {session: false}), productsController.delete);
+      
 }

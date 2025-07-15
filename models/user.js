@@ -90,6 +90,42 @@ User.findById = (id, result) => {
   });
 };
 
+User.findByDelivery = (result) => {
+  const sql = `
+   select
+        u.id,
+        u.email,
+        u.name,
+        u.lastname,
+        u.image,
+        u.phone
+  from  users as u   
+  inner join
+       user_has_roles as uhr
+  on
+       uhr.id_user = u.id
+  inner join
+       roles as r
+  on
+       r.id = uhr.id_rol
+  where
+       r.id = 2;
+  `;
+  db.query(
+    sql,
+    (err, data) => {
+      if (err) {
+        console.log("Error: ", err);
+        result(err, null);
+      } else {
+        result(null, data);
+      }
+    }
+  )
+
+
+}
+
 User.findByEmail = (email, result) => {
   const sql = `
     SELECT

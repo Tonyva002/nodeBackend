@@ -6,25 +6,47 @@ const Rol = require("../models/rol");
 const storage = require("../utils/cloud_storage");
 
 module.exports = {
-  
+
+  findByDelivery(req, res){
+    User.findByDelivery((err, data) => {
+       if (err) {
+        return res.status(500).json({
+          success: false,
+          message: "Error al listar los repartidores",
+          error: err,
+        });
+      }
+
+       return res.status(200).json(data);
+
+
+    });
+
+  },
   login(req, res) {
     const email = req.body.email;
     const password = req.body.password;
 
+    if (!email || !password) {
+      return res.status(400).json({
+        success: false,
+        message: "Email and password are required",
+      });
+    }
+
     User.findByEmail(email, async (err, myUser) => {
-   
       if (err) {
-        return res.status(501).json({
+        return res.status(500).json({
           success: false,
           message: "Error registering user",
           error: err,
         });
       }
       if (!myUser) {
-        return res.status(401).json({
+        return res.status(404).json({
           // El cliente no tiene autorizacion para realizar esta peticion (401)
           success: false,
-          message: "The email was not found",
+          message: "Email not found",
         });
       }
 
@@ -44,64 +66,84 @@ module.exports = {
           phone: myUser.phone,
           image: myUser.image,
           session_token: `JWT ${token}`,
-          roles: JSON.parse(myUser.roles)
+          roles: JSON.parse(myUser.roles),
         };
 
-        return res.status(201).json({
+        return res.status(200).json({
           success: true,
           message: "The user was authenticated",
           data: data, // El Id del nuevo usuario que se registro
         });
       } else {
         return res.status(401).json({
-          // El cliente no tiene autorizacion para realizar esta peticion (401)
           success: false,
-          message: "The password is incorrect",
+          message: "Incorrect password",
         });
       }
     });
   },
 
-  register(req, res) {
-    const user = req.body; // Capturo los datos que me envie el cliente
-    User.create(user, (err, data) => {
-      if (err) {
-        return res.status(501).json({
-          success: false,
-          message: "Error registering user",
-          error: err,
-        });
-      }
+  register: async (req, res) => {
+    const user = req.body;
 
-      return res.status(201).json({
-        success: true,
-        message: "Registered user successfully",
-        data: data, // El Id del nuevo usuario que se registro
+    try {
+      User.create(user, (err, data) => {
+        if (err) {
+          return res.status(500).json({
+            success: false,
+            message: "Error registering user",
+            error: err,
+          });
+        }
+
+        return res.status(200).json({
+          success: true,
+          message: "Registered user successfully",
+          data,
+        });
       });
-    });
+    } catch (error) {
+      return res.status(500).json({
+        success: false,
+        message: "Internal error hashing password",
+        error: error.message,
+      });
+    }
   },
 
+  
+ // Metodo para registrar usuario con imagen
+ async registerWithImage(req, res) {
+  const user = JSON.parse(req.body.user);
+  const files = req.files;
 
-
-  async registerWithImage(req, res) {
-    const user = JSON.parse(req.body.user); // Capturo los datos que me envie el cliente
-
-    const files = req.files;
-
-    if (files.length > 0) {
-      const path = `image_${Date.now()}`;
-      const url = await storage(files[0], path);
-
-      if (url != undefined && url != null) {
-        user.image = url;
-      }
+  // 1. Validar email duplicado
+  User.findByEmail(user.email, async (err, existingUser) => {
+    if (err) {
+      return res.status(500).json({
+        success: false,
+        message: 'Error checking user email',
+        error: err,
+      });
     }
 
+    if (existingUser) {
+      return res.status(409).json({
+        success: false,
+        message: 'Email is already registered',
+      });
+    }
+
+    // 2. Subir imagen si existe
+    const url = await uploadImageIfExists(files);
+    if (url) user.image = url;
+
+    // 3. Crear usuario
     User.create(user, (err, data) => {
       if (err) {
-        return res.status(501).json({
+        return res.status(500).json({
           success: false,
-          message: "Error registering user",
+          message: 'Error registering user',
           error: err,
         });
       }
@@ -114,90 +156,80 @@ module.exports = {
       );
       user.session_token = `JWT ${token}`;
 
-      Rol.create(
-        user.id,
-        3,
-        (err,
-        (data) => {
-          if (err) {
-            return res.status(501).json({
-              success: false,
-              message: "Error registering user role",
-              error: err,
-            });
-          } else {
-            return res.status(201).json({
-              success: true,
-              message: "Registered user successfully",
-              data: user, // Retornamos el usuario
-            });
-          }
-        })
-      );
+      // 4. Asignar rol por defecto (3)
+      Rol.create(user.id, 3, (err, data) => {
+        if (err) {
+          return res.status(500).json({
+            success: false,
+            message: 'Error registering user role',
+            error: err,
+          });
+        }
+
+        return res.status(200).json({
+          success: true,
+          message: 'Registered user successfully',
+          data: user,
+        });
+      });
     });
-  },
+  });
+},
 
 
   // Metodo para actualizar usuario con imagen
-     async updateWithImage(req, res) {
-        const user = JSON.parse(req.body.user);  // Capturo los datos que me envie el cliente.
-       
-        const files = req.files;
+  async updateWithImage(req, res) {
+    const user = JSON.parse(req.body.user); // Capturo los datos que me envie el cliente.
 
-        if(files.length > 0) {
-            const path = `image_${Date.now()}`;
-            const url = await storage(files[0], path);
-            
-            if(url != undefined && url != null){
-                user.image = url;
+    const files = req.files;
 
-            }
-        }
-        
-        User.update(user, (err, data) => {
+    const url = await uploadImageIfExists(files);
+    if (url) user.image = url;
 
-            if(err) {
-                return res.status(501).json({
-                    success: false,
-                    message: 'Error updating user ',
-                    error: err
-                });
-            }
-
-            return res.status(201).json({
-                success: true,
-                message: 'User successfully updated',
-                data: user 
-            });
-
-
+    User.update(user, (err, data) => {
+      if (err) {
+        return res.status(500).json({
+          success: false,
+          message: "Error updating user ",
+          error: err,
         });
-    },
+      }
 
+      return res.status(200).json({
+        success: true,
+        message: "User successfully updated",
+        data: user,
+      });
+    });
+  },
 
-    // Metodo para actualizar usuario sin imagen
-    async updateWithoutImage(req, res) {
-        const user = req.body;  // Capturo los datos que me envie el cliente.
-    
-        
-        User.updateWithoutImage(user, (err, data) => {
+  // Metodo para actualizar usuario sin imagen
+  async updateWithoutImage(req, res) {
+    const user = req.body; // Capturo los datos que me envie el cliente.
 
-            if(err) {
-                return res.status(501).json({
-                    success: false,
-                    message: 'Error updating user ',
-                    error: err
-                });
-            }
-
-            return res.status(201).json({
-                success: true,
-                message: 'User successfully updated',
-                data: user 
-            });
-
-
+    User.updateWithoutImage(user, (err, data) => {
+      if (err) {
+        return res.status(500).json({
+          success: false,
+          message: "Error updating user ",
+          error: err,
         });
-    },
-    
+      }
+
+      return res.status(200).json({
+        success: true,
+        message: "User successfully updated",
+        data: user,
+      });
+    });
+  },
 };
+
+async function uploadImageIfExists(files) {
+  if (files && files.length > 0) {
+    const path = `image_${Date.now()}`;
+    const url = await storage(files[0], path);
+    return url;
+  }
+  return null;
+}

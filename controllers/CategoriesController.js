@@ -7,13 +7,13 @@ module.exports = {
  async getAll(req, res){
   Category.getAll((err, data) => {
      if (err) {
-        return res.status(501).json({
+        return res.status(500).json({
           success: false,
           message: "Error al listar las categorias",
           error: err,
         });
       }
-      return res.status(201).json(data);
+      return res.status(200).json(data);
   })
 
  },
@@ -36,14 +36,14 @@ module.exports = {
 
     Category.create(category, (err, id) => {
       if (err) {
-        return res.status(501).json({
+        return res.status(500).json({
           success: false,
           message: "Error al crear la categoria",
           error: err,
         });
       }
 
-      return res.status(201).json({
+      return res.status(200).json({
         success: true,
         message: "La categoria se creo correctamente",
         data: `${id}`,
@@ -69,14 +69,14 @@ module.exports = {
 
     Category.update(category, (err, id) => {
       if (err) {
-        return res.status(501).json({
+        return res.status(500).json({
           success: false,
           message: "Error al actualizar la categoria",
           error: err,
         });
       }
 
-      return res.status(201).json({
+      return res.status(200).json({
         success: true,
         message: "La categoria se actualizo correctamente",
         data: `${id}`,
@@ -90,14 +90,14 @@ module.exports = {
     const category = req.body; // Capturo los datos que me envie el cliente
     Category.update(category, (err, id) => {
       if (err) {
-        return res.status(501).json({
+        return res.status(500).json({
           success: false,
           message: "Error al actualizar la categoria",
           error: err,
         });
       }
 
-      return res.status(201).json({
+      return res.status(200).json({
         success: true,
         message: "La categoria se actualizo correctamente",
         data: id
@@ -111,13 +111,13 @@ module.exports = {
     const id = req.params.id;
     Category.delete(id, (err, data) => {
        if (err) {
-        return res.status(501).json({
+        return res.status(500).json({
           success: false,
           message: "Error al eliminar la categoria",
           error: err,
         });
       }
-       return res.status(201).json({
+       return res.status(200).json({
         success: true,
         message: "La categoria se elimino correctamente",
         data: `${id}`
