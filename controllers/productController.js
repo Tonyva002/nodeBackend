@@ -1,7 +1,6 @@
 const Product = require("../models/product");
 const storage = require("../utils/cloud_storage");
 
-// Helper para convertir métodos callback en promesas
 const createProductAsync = (product) =>
   new Promise((resolve, reject) => {
     Product.create(product, (err, id) => {
@@ -58,9 +57,6 @@ module.exports = {
     }
   },
 
-
-
-  
   // Crear producto con imágenes
   async create(req, res) {
     try {
@@ -107,11 +103,6 @@ module.exports = {
     }
   },
 
-
-
-
-
-
   // Actualizar producto con imagen
   async updateWithImage(req, res) {
     try {
@@ -143,9 +134,6 @@ module.exports = {
     }
   },
 
-
-
-
   // Actualizar producto sin imagen
   async updateWithoutImage(req, res) {
     try {
@@ -165,8 +153,6 @@ module.exports = {
       });
     }
   },
-
-
 
   // Eliminar producto
   async delete(req, res) {
