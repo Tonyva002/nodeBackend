@@ -15,12 +15,7 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
-app.use(session({
-    secret: 'mi-secreto',
-    resave: false,
-    saveUninitialized: true,
-    cookie: { secure: false }
-}));
+
 app.use(passport.initialize());
 app.use(passport.session());
 
