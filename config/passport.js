@@ -3,6 +3,7 @@ const ExtractJwt = require('passport-jwt').ExtractJwt;
 const Keys = require('./keys');
 const User = require('../models/user');
 
+// JWT
 
 module.exports = (passport) => {
 
