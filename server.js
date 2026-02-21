@@ -51,7 +51,7 @@ app.use((err, req, res, next) => {
 });
 
 // Iniciar servidor
-server.listen(port, '10.0.0.4', () => {
+server.listen(port, () => {
     console.log(`Aplicación de NodeJS ${process.pid} iniciada en puerto ${port}`);
 });
 

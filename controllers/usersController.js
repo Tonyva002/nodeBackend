@@ -6,10 +6,9 @@ const Rol = require("../models/rol");
 const storage = require("../utils/cloud_storage");
 
 module.exports = {
-
-  findByDelivery(req, res){
+  findByDelivery(req, res) {
     User.findByDelivery((err, data) => {
-       if (err) {
+      if (err) {
         return res.status(500).json({
           success: false,
           message: "Error al listar los repartidores",
@@ -17,13 +16,10 @@ module.exports = {
         });
       }
 
-       return res.status(200).json(data);
-
-
+      return res.status(200).json(data);
     });
-
   },
-  
+
   login(req, res) {
     const email = req.body.email;
     const password = req.body.password;
@@ -57,7 +53,7 @@ module.exports = {
         const token = jwt.sign(
           { id: myUser.id, email: myUser.email },
           keys.secretOrKey,
-          {}
+          {},
         );
         const data = {
           id: myUser.id,
@@ -67,7 +63,10 @@ module.exports = {
           phone: myUser.phone,
           image: myUser.image,
           session_token: `JWT ${token}`,
-          roles: JSON.parse(myUser.roles),
+          roles:
+            typeof myUser.roles === "string"
+              ? JSON.parse(myUser.roles)
+              : myUser.roles,
         };
 
         return res.status(200).json({
@@ -112,71 +111,69 @@ module.exports = {
     }
   },
 
-  
- // Metodo para registrar usuario con imagen
- async registerWithImage(req, res) {
-  const user = JSON.parse(req.body.user);
-  const files = req.files;
+  // Metodo para registrar usuario con imagen
+  async registerWithImage(req, res) {
+    const user = JSON.parse(req.body.user);
+    const files = req.files;
 
-  // 1. Validar email duplicado
-  User.findByEmail(user.email, async (err, existingUser) => {
-    if (err) {
-      return res.status(500).json({
-        success: false,
-        message: 'Error checking user email',
-        error: err,
-      });
-    }
-
-    if (existingUser) {
-      return res.status(409).json({
-        success: false,
-        message: 'Email is already registered',
-      });
-    }
-
-    // 2. Subir imagen si existe
-    const url = await uploadImageIfExists(files);
-    if (url) user.image = url;
-
-    // 3. Crear usuario
-    User.create(user, (err, data) => {
+    // 1. Validar email duplicado
+    User.findByEmail(user.email, async (err, existingUser) => {
       if (err) {
         return res.status(500).json({
           success: false,
-          message: 'Error registering user',
+          message: "Error checking user email",
           error: err,
         });
       }
 
-      user.id = `${data}`;
-      const token = jwt.sign(
-        { id: user.id, email: user.email },
-        keys.secretOrKey,
-        {}
-      );
-      user.session_token = `JWT ${token}`;
+      if (existingUser) {
+        return res.status(409).json({
+          success: false,
+          message: "Email is already registered",
+        });
+      }
 
-      // 4. Asignar rol por defecto (3)
-      Rol.create(user.id, 2, (err, data) => {
+      // 2. Subir imagen si existe
+      const url = await uploadImageIfExists(files);
+      if (url) user.image = url;
+
+      // 3. Crear usuario
+      User.create(user, (err, data) => {
         if (err) {
           return res.status(500).json({
             success: false,
-            message: 'Error registering user role',
+            message: "Error registering user",
             error: err,
           });
         }
 
-        return res.status(200).json({
-          success: true,
-          message: 'Registered user successfully',
-          data: user,
+        user.id = `${data}`;
+        const token = jwt.sign(
+          { id: user.id, email: user.email },
+          keys.secretOrKey,
+          {},
+        );
+        user.session_token = `JWT ${token}`;
+
+        // 4. Asignar rol por defecto (2) que es el de cliente
+        Rol.create(user.id, 1, (err, data) => {
+          if (err) {
+            return res.status(500).json({
+              success: false,
+              message: "Error registering user role",
+              error: err,
+            });
+          }
+
+          return res.status(200).json({
+            success: true,
+            message: "Registered user successfully",
+            data: user,
+          });
         });
       });
     });
-  });
-},
-
+  },
 
   // Metodo para actualizar usuario con imagen
   async updateWithImage(req, res) {
