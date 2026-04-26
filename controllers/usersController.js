@@ -155,7 +155,7 @@ module.exports = {
         );
         user.session_token = `JWT ${token}`;
 
-        // 4. Asignar rol por defecto (2) que es el de cliente
+        // 4. Asignar rol por defecto (1) que es el de cliente
         Rol.create(user.id, 1, (err, data) => {
           if (err) {
             return res.status(500).json({
